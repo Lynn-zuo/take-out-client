@@ -171,6 +171,8 @@ export default {
 @import "../../common/stylus/mixins.styl"
 .msite  //首页
   width 100%
+  height 100%
+  overflow scroll
   .msite_nav
     bottom-border-1px(#e4e4e4)
     margin-top 45px
@@ -214,8 +216,8 @@ export default {
     background #fff
     .shop_header
       padding 10px 10px 0
-      .shop_icon
-        margin-left 5px
+      .icon-xuanxiang
+        margin-left 3px
         color #999
       .shop_header_title
         color #999

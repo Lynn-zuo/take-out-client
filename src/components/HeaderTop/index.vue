@@ -35,8 +35,8 @@ export default {
     transform translateY(-50%)
     width 10%
     height 50%
-    .icon-sousuo
-      font-size 25px
+    .icon-headsearch
+      font-size 22px
       color #fff
   .header_title
     position absolute
