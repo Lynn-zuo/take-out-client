@@ -115,7 +115,10 @@
           </div>
         </div>
         <!-- Add Pagination -->
-        <div class="swiper-pagination"></div>
+        <div class="swiper-pagination">
+          <!-- <span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span>
+          <span class="swiper-pagination-bullet"></span> -->
+        </div>
       </div>
     </nav>
     <!--首页附近商家-->
@@ -126,7 +129,7 @@
       </div>
       <div class="shop_container">
         <ul class="shop_list">
-          <li class="shop_li border-1px">
+          <li class="shop_li">
             <a>
               <div class="shop_left">
                 <img class="shop_img" src="./imgs/shop/1.jpg">
@@ -170,7 +173,7 @@
               </div>
             </a>
           </li>
-          <li class="shop_li border-1px">
+          <li class="shop_li">
             <a>
               <div class="shop_left">
                 <img class="shop_img" src="./imgs/shop/2.jpg">
@@ -214,7 +217,7 @@
               </div>
             </a>
           </li>
-          <li class="shop_li border-1px">
+          <li class="shop_li">
             <a>
               <div class="shop_left">
                 <img class="shop_img" src="./imgs/shop/3.jpg">
@@ -258,7 +261,7 @@
               </div>
             </a>
           </li>
-          <li class="shop_li border-1px">
+          <li class="shop_li">
             <a>
               <div class="shop_left">
                 <img class="shop_img" src="./imgs/shop/4.jpg">
@@ -310,15 +313,36 @@
 
 <script>
 import HeaderTop from '@/components/HeaderTop'
- export default {
-   name:'',
-   components: {
-     HeaderTop
-   },
-   data () {
-     return { }
-   }
- }
+import Swiper from 'swiper'
+import 'swiper/swiper-bundle.min.css'
+export default {
+  name:'',
+  components: {
+    HeaderTop
+  },
+  data () {
+    return {}
+  },
+  mounted () {
+    new Swiper('.swiper-container', {
+      loop: true, // 循环轮播
+      // 分页器
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        bulletElement: 'span',
+        clickable: true
+      },
+      observer: true, //修改swiper自己或子元素时，自动初始化swiper
+    })
+  },
+  watch: {
+    // function () {
+    //   console.log(this)
+    //   this.$nextTick(() => {})
+    // }
+  }
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixins.styl"
