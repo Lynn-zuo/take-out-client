@@ -6,16 +6,27 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 import FooterGuide from '@/components/FooterGuide'
-import {reqFoodTypes} from '@/api'
+// import {reqAddress, reqFoodCategorys} from '@/api'
 export default {
   name: 'App',
   mounted () {
-    const result = reqFoodTypes()
-    console.log(result)
-    // reqFoodTypes().then(response => {
+    this.getAddress()
+    // this.$store.dispatch('getAddress')
+    // 不使用store状态管理，直接调用函数
+    // const result_addr = await reqAddress('40.10038,116.36867')
+    // console.log(result_addr)
+    // async + mounted
+    // const result_category = await reqFoodCategorys()
+    // console.log(result_category)
+    // reqFoodCategorys().then(response => {
     //   console.log(response)
     // })
+  },
+  methods: {
+    // 用映射函数
+    ...mapActions(['getAddress'])
   },
   components: {
     FooterGuide

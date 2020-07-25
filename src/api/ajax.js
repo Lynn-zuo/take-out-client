@@ -1,6 +1,9 @@
 /*
 ajax请求函数模块
-返回值：promise对象(异步返回的数据是：response.data)
+1. 统一处理请求异常
+2. 异步请求成功的数据不是response，而是：response.data 返回值：promise对象()
+3. 配置请求超时的时间
+4. 通过请求头携带token数据
 */
 import axios from 'axios'
 
@@ -12,7 +15,7 @@ export default function ajax (url, data={}, type='GET') {
         // 准备url query参数数据
       let dataStr = '' // 参数拼接字符串
       Object.keys(data).forEach(key => {
-        dataStr +=key + '=' + data[key] + '&'
+        dataStr += key + '=' + data[key] + '&'
       })
       if(dataStr !== ''){
         dataStr = dataStr.substring(0, dataStr.lastindexOf('&'))
