@@ -11,23 +11,21 @@
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav">
-      <div class="swiper-container">
+      <div class="swiper-container" v-if="categorys.length">
         <div class="swiper-wrapper">
           <div class="swiper-slide" v-for="(categorys, index) in categorysArr" :key="index">
             <a href="javascript:" class="link_to_food" v-for="(category, index) in categorys" :key="index">
               <div class="food_container">
-                <img src="./imgs/nav/1.jpg">
+                <img :src="baseImgUrl+category.image_url">
               </div>
-              <span>甜品饮品</span>
+              <span>{{category.title}}</span>
             </a>
           </div>
         </div>
         <!-- Add Pagination -->
-        <div class="swiper-pagination">
-          <!-- <span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span>
-          <span class="swiper-pagination-bullet"></span> -->
-        </div>
+        <div class="swiper-pagination"></div>
       </div>
+      <img src="./imgs/msite_back.svg" alt="back" v-else>
     </nav>
     <!--首页附近商家-->
     <div class="msite_shop_list">
@@ -43,7 +41,7 @@
 <script>
 import {mapState} from 'vuex'
 import Swiper from 'swiper'
-import 'swiper/swiper-bundle.min.css'
+import 'swiper/css/swiper.min.css'
 import HeaderTop from '@/components/HeaderTop'
 import ShopList from '@/components/ShopList'
 export default {
@@ -53,30 +51,70 @@ export default {
     ShopList
   },
   data () {
-    return {}
+    return {
+      baseImgUrl: 'https://fuss10.elemecdn.com'
+    }
   },
   mounted () {
     this.$store.dispatch('getCategorys')
-    new Swiper('.swiper-container', {
-      loop: true, // 循环轮播
-      // 分页器
-      pagination: {
-        el: '.swiper-pagination',
-        type: 'bullets',
-        bulletElement: 'span',
-        clickable: true
-      },
-      observer: true, //修改swiper自己或子元素时，自动初始化swiper
-    })
+    this.$store.dispatch('getShops')
   },
   computed: {
-    ...mapState(['address', 'categorys'])
+    ...mapState(['address', 'categorys']),
+    // 根据category一维数组生成一个二维数组，小数组中的元素个数最大是8
+    categorysArr () {
+      const {categorys} = this // 取出一维数组
+      // 准备空的二维数组
+      const arr = []
+      // 准备一个小数组，最大长度为8
+      let minArr = []
+      // 遍历categorys
+      categorys.forEach(c => {
+        // 如果当前minArr已经满了，创建一个新的
+        if(minArr.length === 8) {
+          minArr = []
+        }
+        // 如果minArr是空的，将小数组保存到大数组中
+        if(minArr.length === 0) {
+          arr.push(minArr)
+        }
+        // 将当前分类保存到小数组中
+        minArr.push(c)
+      })
+      return arr
+    }
   },
   watch: {
-    // function () {
-    //   console.log(this)
-    //   this.$nextTick(() => {})
-    // }
+    // eslint-disable-next-line
+    categorys (value) { // categorys数组中有数据了,在异步更新界面之前执行
+      // setTimeout(() => {
+      //   new Swiper('.swiper-container', {
+      //     loop: true, // 循环轮播
+      //     // 分页器
+      //     pagination: {
+      //       el: '.swiper-pagination',
+      //       type: 'bullets',
+      //       bulletElement: 'span',
+      //       clickable: true
+      //     },
+      //     observer: true, //修改swiper自己或子元素时，自动初始化swiper
+      //   })
+      // }, 100)
+
+      this.$nextTick(() => { // 一旦完成界面更新立即调用(此条语句写在数据更新之后)
+        new Swiper('.swiper-container', {
+          loop: true, // 循环轮播
+          // 分页器
+          pagination: {
+            el: '.swiper-pagination',
+            type: 'bullets',
+            bulletElement: 'span',
+            clickable: true
+          },
+          observer: true, //修改swiper自己或子元素时，自动初始化swiper
+        })
+      }, 100)
+    }
   }
 }
 </script>

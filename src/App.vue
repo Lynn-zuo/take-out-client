@@ -12,7 +12,7 @@ import FooterGuide from '@/components/FooterGuide'
 export default {
   name: 'App',
   mounted () {
-    this.getAddress()
+    this.getAddress()  // vuex状态全局可见，尽早获取
     // this.$store.dispatch('getAddress')
     // 不使用store状态管理，直接调用函数
     // const result_addr = await reqAddress('40.10038,116.36867')
