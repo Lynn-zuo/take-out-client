@@ -1,75 +1,139 @@
 <template>
-<section class="loginContainer">
-  <div class="loginInner">
-    <div class="login_header">
-        <h2 class="login_logo">好吃外卖</h2>
-        <div class="login_header_title">
-        <a href="javascript:;" class="on">短信登录</a>
-        <a href="javascript:;">密码登录</a>
-        </div>
-    </div>
-    <div class="login_content">
-        <form>
-        <div class="on">
-            <section class="login_message">
-            <input type="tel" maxlength="11" placeholder="手机号">
-            <button disabled="disabled" class="get_verification">获取验证码</button>
-            </section>
-            <section class="login_verification">
-            <input type="tel" maxlength="8" placeholder="验证码">
-            </section>
-            <section class="login_hint">
-            温馨提示：未注册好吃外卖帐号的手机号，登录时将自动注册，且代表已同意
-            <a href="javascript:;">《用户服务协议》</a>
-            </section>
-        </div>
-        <div>
+  <section class="loginContainer">
+    <div class="loginInner">
+      <div class="login_header">
+          <h2 class="login_logo">好吃外卖</h2>
+          <div class="login_header_title">
+          <a href="javascript:;" :class="{on: loginWay}" @click="loginWay=true">短信登录</a>
+          <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay=false">密码登录</a>
+          </div>
+      </div>
+      <div class="login_content">
+        <form @submit.prevent="login">
+          <div :class="{on: loginWay}">
+              <section class="login_message">
+              <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
+              <button :disabled="!isrightPhone" class="get_verification" :class="{right_phone: isrightPhone}"
+                @click.prevent="getCode">{{computerTime>0 ? `已发送(${computerTime})s` : '获取验证码'}}</button>
+              </section>
+              <section class="login_verification">
+              <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
+              </section>
+              <section class="login_hint">
+              温馨提示：未注册好吃外卖帐号的手机号，登录时将自动注册，且代表已同意
+              <a href="javascript:;">《用户服务协议》</a>
+              </section>
+          </div>
+          <div :class="{on: !loginWay}">
             <section>
-            <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
-            </section>
-            <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="密码">
-                <div class="switch_button off">
-                <div class="switch_circle"></div>
-                <span class="switch_text">...</span>
+              <section class="login_message">
+                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
+              </section>
+              <section class="login_verification">
+                <input type="tel" maxlength="8" placeholder="密码" v-model="pwd" v-if="showPwd">
+                <input type="password" maxlength="8" placeholder="密码" v-model="pwd" v-else>
+                  <div class="switch_button" :class="showPwd?'on':'off'" @click="showPwd=!showPwd">
+                    <div class="switch_circle" :class="{right: showPwd}"></div>
+                  <span class="switch_text">{{showPwd?'abc':'...'}}</span>
                 </div>
-            </section>
-            <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码">
+              </section>
+              <section class="login_message">
+                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
                 <img class="get_verification" src="./imgs/captcha.svg" alt="captcha">
+              </section>
             </section>
-            </section>
-        </div>
-        <button class="login_submit">登录</button>
+          </div>
+          <button class="login_submit">登录</button>
         </form>
         <a href="javascript:;" class="about_us">关于我们</a>
+      </div>
+      <a href="javascript:" class="go_back" @click="$router.back()">
+          <i class="iconfont icon-jiantou2"></i>
+      </a>
     </div>
-    <a href="javascript:" class="go_back" @click="$router.back()">
-        <i class="iconfont icon-jiantou2"></i>
-    </a>
-  </div>
-</section>
+    <AlertTip :alertText="alertText" v-show="alertShow" @closeTip="closeTip"/>
+  </section>
 </template>
 <script>
+import AlertTip from '@/components/AlertTip'
 export default {
   name:'',
   data () {
     return {
-
+      loginWay: true, // true代表短信登录，false代表密码登录
+      computerTime: 0, // 计时的时间
+      showPwd: false, // 是否显示密码
+      phone: '', // 手机号
+      code: '', // 短信验证码
+      name: '', // 用户名
+      pwd: '', // 密码
+      captcha: '', // 一次性图形验证码
+      alertText: '', // 提示文本
+      alertShow: false // 是否显示提示框
     }
   },
   computed:{
-
+    isrightPhone () {
+      return /^1\d{10}$/.test(this.phone)
+    }
   },
   methods:{
-
+    // 异步获取短信验证码
+    getCode () {
+      // 如果当前没有计时
+      if(!this.computerTime){
+        // 启动倒计时
+        this.computerTime = 30
+        const intervalId = setInterval(() => {
+          this.computerTime--
+          if(this.computerTime <=0){
+            // 停止计时
+            clearInterval(intervalId)
+          }
+        }, 1000)
+      }
+    },
+    showAlert (alertText) {
+      this.alertShow = true
+      this.alertText = alertText
+    },
+    closeTip () {
+      this.alertShow = false
+      this.alertText = ''
+    },
+    // 异步登录
+    login () {
+      // 前台表单验证
+      if(this.loginWay) { // 短信登陆
+        const {rightPhone, phone, code} = this
+        if(!this.rightPhone) {
+          // 手机号不正确
+          this.showAlert('手机号不正确')
+        } else if(!/^\d{6}$/.test(code)) {
+          // 验证码必须是6位数字
+          this.showAlert('验证码必须是6位数字')
+        }
+      } else { // 用户名密码登录
+        const {name, pwd, captcha} = this
+        if(!this.name) {
+          // 用户名必须指定
+          this.showAlert('用户名必须指定')
+        } else if (!this.pwd) {
+          // 密码错误
+          this.showAlert('密码错误')
+        } else if (!captcha) {
+          // 图形验证码错误
+          this.showAlert('图形验证码错误')
+        }
+      }
+    }
   },
   components: {
-
-  },
+    AlertTip
+  }
 }
 </script>
+
 <style lang='stylus' rel='stylesheet/stylus'>
 .loginContainer
   width 100%
@@ -130,6 +194,8 @@ export default {
               color #ccc
               font-size 14px
               background transparent
+              &.right_phone
+                color black
           .login_verification
             position relative
             margin-top 16px
@@ -169,6 +235,8 @@ export default {
                 background #fff
                 box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                 transition transform .3s
+                &.right
+                  transform translate(30px)
           .login_hint
             margin-top 12px
             color #999
