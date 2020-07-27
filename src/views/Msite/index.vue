@@ -2,12 +2,13 @@
   <div class="msite">
     <!--首页头部-->
     <HeaderTop :title="address.name">
-      <span class="header_search" slot="left">
+      <router-link class="header_search" slot="left" to="/search">
         <i class="iconfont icon-headsearch"></i>
-      </span>
-      <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
-      </span>
+      </router-link>
+      <router-link class="header_login" slot="right" :to="userInfo._id ? '/userinfo' : '/login'">
+        <i v-if="userInfo._id" class="iconfont icon-person"></i>
+        <span v-else class="header_login_text">登录|注册</span>
+      </router-link>
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav">
@@ -60,7 +61,7 @@ export default {
     this.$store.dispatch('getShops')
   },
   computed: {
-    ...mapState(['address', 'categorys']),
+    ...mapState(['address', 'categorys', 'userInfo']),
     // 根据category一维数组生成一个二维数组，小数组中的元素个数最大是8
     categorysArr () {
       const {categorys} = this // 取出一维数组

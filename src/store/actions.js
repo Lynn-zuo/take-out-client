@@ -1,9 +1,9 @@
 /*
 通过mutations间接更新state的多个方法的对象
 */
-import {RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS} from './mutation-types'
+import {RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS, RECEIVE_USER_INFO} from './mutation-types'
 
-import {reqAddress, reqFoodCategorys, reqShops} from '@/api'
+import {reqAddress, reqFoodCategorys, reqShops, reqUserInfo} from '@/api'
 
 export default {
   // 异步获取地址
@@ -36,6 +36,18 @@ export default {
     if(result.code == 0) {
       const shops = result.data
       commit(RECEIVE_SHOPS, {shops})
+    }
+  },
+  // 同步保存用户信息
+  savaUserInfo ({commit}, userInfo) {
+    commit(RECEIVE_USER_INFO, {userInfo})
+  },
+  // 异步获取用户信息
+  async getUserInfo ({commit}) {
+    const result_userInfo = await reqUserInfo()
+    if(result_userInfo.code === 0){
+      const userInfo = result_userInfo.data
+      commit(RECEIVE_USER_INFO, {userInfo})
     }
   }
 }

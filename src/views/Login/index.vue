@@ -2,7 +2,7 @@
   <section class="loginContainer">
     <div class="loginInner">
       <div class="login_header">
-          <h2 class="login_logo">好吃外卖</h2>
+          <h2 class="login_logo">开心外卖</h2>
           <div class="login_header_title">
           <a href="javascript:;" :class="{on: loginWay}" @click="loginWay=true">短信登录</a>
           <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay=false">密码登录</a>
@@ -39,7 +39,8 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="./imgs/captcha.svg" alt="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"
+                  @click="getCaptcha" ref="captcha">
               </section>
             </section>
           </div>
@@ -54,13 +55,15 @@
     <AlertTip :alertText="alertText" v-show="alertShow" @closeTip="closeTip"/>
   </section>
 </template>
+
 <script>
 import AlertTip from '@/components/AlertTip'
+import {reqSendCode, reqSmsLogin, reqPwdLogin} from '../../api'
 export default {
   name:'',
   data () {
     return {
-      loginWay: true, // true代表短信登录，false代表密码登录
+      loginWay: false, // true代表短信登录，false代表密码登录
       computerTime: 0, // 计时的时间
       showPwd: false, // 是否显示密码
       phone: '', // 手机号
@@ -79,18 +82,32 @@ export default {
   },
   methods:{
     // 异步获取短信验证码
-    getCode () {
+    async getCode () {
       // 如果当前没有计时
       if(!this.computerTime){
         // 启动倒计时
         this.computerTime = 30
-        const intervalId = setInterval(() => {
+        this.intervalId = setInterval(() => {
           this.computerTime--
           if(this.computerTime <=0){
             // 停止计时
-            clearInterval(intervalId)
+            clearInterval(this.intervalId)
           }
         }, 1000)
+        // 发送ajax请求 (向指定手机号发送验证码短信)
+        const smsCode = await reqSendCode(this.phone)
+        // console.log(smsCode.code)
+        if(smsCode.code === 1){
+          // 显示提示
+          // console.log(smsCode.msg)
+          this.showAlert (smsCode.msg)
+          // 停止计时
+          if(this.computerTime>0) {
+            this.computerTime=0
+            clearInterval(this.intervalId)
+            // this.intervalId=undefined
+          }
+        }
       }
     },
     showAlert (alertText) {
@@ -101,30 +118,72 @@ export default {
       this.alertShow = false
       this.alertText = ''
     },
+    // 获取一个新的图形验证码
+    getCaptcha () {
+      // 每次指定的src值要不一样
+      // 此处没有ajax请求，所以不涉及我们要考虑的ajax跨域问题
+      this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+    },
     // 异步登录
-    login () {
+    async login () {
+      let result_login
       // 前台表单验证
       if(this.loginWay) { // 短信登陆
-        const {rightPhone, phone, code} = this
-        if(!this.rightPhone) {
+        const {isrightPhone, phone, code} = this
+        if(!this.isrightPhone) {
           // 手机号不正确
           this.showAlert('手机号不正确')
+          return
         } else if(!/^\d{6}$/.test(code)) {
           // 验证码必须是6位数字
           this.showAlert('验证码必须是6位数字')
+          return
+        } else {
+          // 发送ajax请求短信登录
+          result_login = await reqSmsLogin (phone, code)
         }
       } else { // 用户名密码登录
         const {name, pwd, captcha} = this
         if(!this.name) {
           // 用户名必须指定
           this.showAlert('用户名必须指定')
+          return
         } else if (!this.pwd) {
           // 密码错误
           this.showAlert('密码错误')
+          return
         } else if (!captcha) {
           // 图形验证码错误
           this.showAlert('图形验证码错误')
+          return
+        } else {
+          // 发送ajax请求短信登录
+          result_login = await reqPwdLogin ({name, pwd, captcha})
         }
+      }
+      // 停止计时
+      if(this.computerTime>0) {
+        this.computerTime=0
+        clearInterval(this.intervalId)
+        // this.intervalId=undefined
+      }
+      console.log(result_login)
+      // 根据结果处理数据
+      if(result_login.code === 0) {
+        const user = result_login.data
+        // console.log(user)
+        // 将user保存到vuex的state
+        this.$store.dispatch('savaUserInfo', user)
+        // 登录路由跳转界面去个人中心界面
+        this.$router.replace('/profile')
+      } else {
+        // 显示新的图形验证码
+        this.getCaptcha ()
+        // 显示警告信息
+        const msg = result_login.msg
+        this.showAlert(msg)
+        // 清空图形验证码输入框框
+        this.captcha = ''
       }
     }
   },

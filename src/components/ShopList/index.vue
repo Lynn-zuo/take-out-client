@@ -52,7 +52,7 @@ export default {
   name:'',
   data () {
     return {
-      shops_baseImgUrl: 'http://elm.cangdu.org/img/'
+      shops_baseImgUrl: 'https://fuss10.elemecdn.com/'
     }
   },
   computed:{
