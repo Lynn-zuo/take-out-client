@@ -88,18 +88,52 @@
       </div>
     </a>
   </section>
+  <section class="profile_my_order border-1px">
+    <van-button type="danger" style="width:100%" v-if="userInfo._id" @click="logout">退出登录</van-button>
+  </section>
 </div>
 </template>
 <script>
 import {mapState} from 'vuex'
 import HeaderTop from '@/components/HeaderTop'
+import {Dialog,Toast} from 'vant';
 export default {
   name:'',
   computed: {
     ...mapState(['userInfo'])
   },
+  methods: {
+    logout () {
+      Dialog.confirm({
+        title: '退出登录',
+        message: '是否确认退出？',
+      })
+        .then(() => {
+          // on confirm
+          this.$store.dispatch('getLogout')
+          Toast('登出完成！')
+        })
+        .catch(() => {
+          // on cancel
+          console.log('点击了取消')
+        })
+      // function beforeClose(action, done) {
+      //   if (action === 'confirm') {
+      //     setTimeout(done, 1000);
+      //   } else {
+      //     done();
+      //   }
+      // }
+      // Dialog.confirm({
+      //   title: '标题',
+      //   message: '弹窗内容',
+      //   beforeClose,
+      // })
+    }
+  },
   components: {
-    HeaderTop
+    HeaderTop,
+    [Dialog.Component.name]: Dialog.Component
   },
   data () {
     return { }

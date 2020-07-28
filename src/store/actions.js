@@ -1,9 +1,9 @@
 /*
 通过mutations间接更新state的多个方法的对象
 */
-import {RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS, RECEIVE_USER_INFO} from './mutation-types'
+import {RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS, RECEIVE_USER_INFO, RESET_USER_INFO} from './mutation-types'
 
-import {reqAddress, reqFoodCategorys, reqShops, reqUserInfo} from '@/api'
+import {reqAddress, reqFoodCategorys, reqShops, reqUserInfo, reqLogout} from '@/api'
 
 export default {
   // 异步获取地址
@@ -48,6 +48,13 @@ export default {
     if(result_userInfo.code === 0){
       const userInfo = result_userInfo.data
       commit(RECEIVE_USER_INFO, {userInfo})
+    }
+  },
+  // 异步退出登录
+  async getLogout ({commit}) {
+    const result_userInfo = await reqLogout()
+    if(result_userInfo.code === 0){
+      commit(RESET_USER_INFO)
     }
   }
 }
