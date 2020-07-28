@@ -27,3 +27,11 @@ export const reqLogout = () => ajax(BASE_URL+`/logout`)
 export const reqAutoLogin = () => ajax(BASE_URL+`/auto_login`)
 // 11、根据经纬度和关键字搜索商铺列表
 export const reqSearchShops = (geohash, keyword) => ajax(`${BASE_URL}/search_shops`, {geohash, keyword})
+
+// mockjs---data.json
+// 1. 获取商家信息
+export const reqShopInfo = () => ajax(`/info`)
+// 2. 获取商家评价数组
+export const reqShopRatings = () => ajax(`/ratings`)
+// 3. 获取商家商品数组
+export const reqShopGoods = () => ajax(`/goods`)

@@ -7,6 +7,8 @@ import router from './router'
 import store from './store'
 import {Button} from 'vant'
 
+import './mock/mockServer' // 加载mockServer
+
 Vue.config.productionTip = false
 // 注册全局组件标签
 Vue.component(Button.name, Button) // <vant-Button>
