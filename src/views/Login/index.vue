@@ -49,7 +49,7 @@
         <a href="javascript:;" class="about_us">关于我们</a>
       </div>
       <a href="javascript:" class="go_back" @click="$router.back()">
-          <i class="iconfont icon-jiantou2"></i>
+        <i class="iconfont icon-arrow_left"></i>
       </a>
     </div>
     <AlertTip :alertText="alertText" v-show="alertShow" @closeTip="closeTip"/>

@@ -30,8 +30,8 @@ export const reqSearchShops = (geohash, keyword) => ajax(`${BASE_URL}/search_sho
 
 // mockjs---data.json
 // 1. 获取商家信息
-export const reqShopInfo = () => ajax(`/info`)
+export const reqShopInfo = () => ajax(`/shop_info`)
 // 2. 获取商家评价数组
-export const reqShopRatings = () => ajax(`/ratings`)
+export const reqShopRatings = () => ajax(`/shop_ratings`)
 // 3. 获取商家商品数组
-export const reqShopGoods = () => ajax(`/goods`)
+export const reqShopGoods = () => ajax(`/shop_goods`)

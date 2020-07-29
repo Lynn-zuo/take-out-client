@@ -7,11 +7,10 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_USER_INFO,
   RESET_USER_INFO,
-  RECEIVE_GOODS,
-  RECEIVE_RATINGS,
-  RECEIVE_INFO
+  RECEIVE_SHOP_GOODS,
+  RECEIVE_SHOP_RATINGS,
+  RECEIVE_SHOP_INFO
 } from './mutation-types'
-import { Info } from 'vant'
 
 export default {
   [RECEIVE_ADDRESS] (state, {address}) {
@@ -29,13 +28,13 @@ export default {
   [RESET_USER_INFO] (state) {
     state.userInfo = {}
   },
-  [RECEIVE_INFO] (state, {shopInfo}) {
+  [RECEIVE_SHOP_INFO] (state, {shopInfo}) {
     state.shopInfo = shopInfo
   },
-  [RECEIVE_RATINGS] (state, {shopRatings}) {
+  [RECEIVE_SHOP_RATINGS] (state, {shopRatings}) {
     state.shopRatings = shopRatings
   },
-  [RECEIVE_GOODS] (state, {shopGoods}) {
+  [RECEIVE_SHOP_GOODS] (state, {shopGoods}) {
     state.shopGoods = shopGoods
   }
 }

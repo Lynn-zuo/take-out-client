@@ -7,9 +7,9 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_USER_INFO,
   RESET_USER_INFO,
-  RECEIVE_GOODS,
-  RECEIVE_RATINGS,
-  RECEIVE_INFO
+  RECEIVE_SHOP_GOODS,
+  RECEIVE_SHOP_RATINGS,
+  RECEIVE_SHOP_INFO
 } from './mutation-types'
 
 import {
@@ -83,7 +83,7 @@ export default {
     const result_shopInfo = await reqShopInfo()
     if(result_shopInfo.code === 0){
       const shopInfo = result_shopInfo.data // 和state中保持一致
-      commit(RECEIVE_INFO, {shopInfo})
+      commit(RECEIVE_SHOP_INFO, {shopInfo})
 
       // cb && cb()
     }
@@ -93,7 +93,7 @@ export default {
     const result_shopRatings = await reqShopRatings()
     if(result_shopRatings.code === 0){
       const shopRatings = result_shopRatings.data
-      commit(RECEIVE_RATINGS, {shopRatings})
+      commit(RECEIVE_SHOP_RATINGS, {shopRatings})
 
       // cb && cb()
     }
@@ -103,7 +103,7 @@ export default {
     const result_shopGoods = await reqShopGoods()
     if(result_shopGoods.code === 0){
       const shopGoods = result_shopGoods.data
-      commit(RECEIVE_GOODS, {shopGoods})
+      commit(RECEIVE_SHOP_GOODS, {shopGoods})
 
       // 如果组件中传递了接收消息的回调函数，数据更新后，调用回调通知调用的组件
       // cb && cb()

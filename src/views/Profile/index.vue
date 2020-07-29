@@ -16,7 +16,7 @@
         </p>
       </div>
       <span class="arrow">
-        <i class="iconfont icon-jiantou1"></i>
+        <i class="iconfont icon-arrow_right"></i>
       </span>
     </router-link>
   </section>
@@ -45,7 +45,7 @@
       <div class="my_order_div">
         <span>我的订单</span>
         <span class="my_order_icon">
-          <i class="iconfont icon-jiantou1"></i>
+          <i class="iconfont icon-arrow_right"></i>
         </span>
       </div>
     </a>
@@ -57,7 +57,7 @@
       <div class="my_order_div">
         <span>积分商城</span>
         <span class="my_order_icon">
-          <i class="iconfont icon-jiantou1"></i>
+          <i class="iconfont icon-arrow_right"></i>
         </span>
       </div>
     </a>
@@ -69,7 +69,7 @@
       <div class="my_order_div">
         <span>硅谷外卖会员卡</span>
         <span class="my_order_icon">
-          <i class="iconfont icon-jiantou1"></i>
+          <i class="iconfont icon-arrow_right"></i>
         </span>
       </div>
     </a>
@@ -83,7 +83,7 @@
       <div class="my_order_div">
         <span>服务中心</span>
         <span class="my_order_icon">
-          <i class="iconfont icon-jiantou1"></i>
+          <i class="iconfont icon-arrow_right"></i>
         </span>
       </div>
     </a>
@@ -193,7 +193,7 @@ export default {
         position absolute
         right 15px
         top 40%
-        .icon-jiantou1
+        .icon-arrow_right
           color #fff
           font-size 15px
   .profile_info_data
@@ -272,7 +272,7 @@ export default {
         .my_order_icon
           width 10px
           height 10px
-          .icon-jiantou1
+          .icon-arrow_right
             color #bbb
             font-size 10px
 </style>
