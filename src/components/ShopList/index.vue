@@ -154,11 +154,11 @@ export default {
               .delivery_left
                 color #fff
                 margin-right -10px
-                background-color #02a774
-                border 1px solid #02a774
+                background-color #3399FF
+                border 1px solid #3399FF
               .delivery_right
-                color #02a774
-                border 1px solid #02a774
+                color #3399FF
+                border 1px solid #3399FF
           .shop_distance
             clearFix()
             width 100%

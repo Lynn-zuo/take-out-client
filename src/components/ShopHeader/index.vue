@@ -292,7 +292,7 @@ export default {
           font-style normal
           font-weight 700
           position relative
-          background-color rgb(112, 188, 70)
+          background-color rgb(70, 131, 188)
           .mini-tag
             position absolute
             left 0
@@ -373,7 +373,7 @@ export default {
           width 36px
           height: 18px
           margin-right 10px
-          color #6a3709
+          color #3399FF
           font-style normal
           position relative
           .mini-tag

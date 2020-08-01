@@ -39,7 +39,7 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"
+                <img class="get_verification" src="http://140.143.133.253:4000/captcha" alt="captcha"
                   @click="getCaptcha" ref="captcha">
               </section>
             </section>
@@ -122,7 +122,7 @@ export default {
     getCaptcha () {
       // 每次指定的src值要不一样
       // 此处没有ajax请求，所以不涉及我们要考虑的ajax跨域问题
-      this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+      this.$refs.captcha.src = 'http://140.143.133.253:4000/captcha?time=' + Date.now()
     },
     // 异步登录
     async login () {
@@ -206,7 +206,7 @@ export default {
       .login_logo
         font-size 40px
         font-weight bold
-        color #02a774
+        color #3399FF
         text-align center
       .login_header_title
         padding-top 40px
@@ -218,9 +218,9 @@ export default {
           &:first-child
             margin-right 40px
           &.on
-            color #02a774
+            color #3399FF
             font-weight 700
-            border-bottom 2px solid #02a774
+            border-bottom 2px solid #3399FF
     .login_content
       >form
         >div
@@ -237,7 +237,7 @@ export default {
             outline 0
             font 400 14px Arial
             &:focus
-              border 1px solid #02a774
+              border 1px solid #3399FF
           .login_message
             position relative
             margin-top 16px
@@ -281,7 +281,7 @@ export default {
                   float right
                   color #ddd
               &.on
-                background #02a774
+                background #3399FF
               >.switch_circle
                 //transform translateX(27px)
                 position absolute
@@ -302,14 +302,14 @@ export default {
             font-size 14px
             line-height 20px
             >a
-              color #02a774
+              color #3399FF
         .login_submit
           display block
           width 100%
           height 42px
           margin-top 30px
           border-radius 4px
-          background #4cd96f
+          background #3399FF
           color #fff
           text-align center
           font-size 16px

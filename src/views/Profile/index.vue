@@ -152,7 +152,7 @@ export default {
       clearFix()
       position relative
       display block
-      background #02a774
+      background #3399FF
       padding 20px 10px
       .profile_image
         float left
@@ -252,13 +252,13 @@ export default {
           margin-left -10px
           font-size 26px
         .icon-order-s
-          color #02a774
+          color #3399FF
         .icon-jifen
           color #ff5f3e
         .icon-vip
           color #f90
         .icon-fuwu
-          color #02a774
+          color #3399FF
       .my_order_div
         width 100%
         border-bottom 1px solid #f1f1f1

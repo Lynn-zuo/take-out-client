@@ -161,7 +161,7 @@ export default {
               color #666
       .swiper-pagination
         >span.swiper-pagination-bullet-active
-          background #02a774
+          background #3399FF
   .msite_shop_list
     top-border-1px(#e4e4e4)
     margin-top 10px
