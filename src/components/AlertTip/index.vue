@@ -37,7 +37,7 @@ export default {
   height 145px
   transform translate(-50%, -50%)
   .alert_container
-    background #3399FF
+    background #FF9900
     width 100%
     height 100%
     overflow hidden
@@ -46,7 +46,7 @@ export default {
     border-radius 5px
     .alert_content
       height 68%
-      background #ffffff
+      background #FFFFCC
       text-align center
       padding-top 10px
       .tip_icon
@@ -64,6 +64,6 @@ export default {
       height 25px
       width 45px
       margin 3px auto
-      background-color #3399FF
+      background-color #FF9900
       border none
 </style>

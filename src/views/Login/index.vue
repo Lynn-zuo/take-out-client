@@ -122,6 +122,9 @@ export default {
     getCaptcha () {
       // 每次指定的src值要不一样
       // 此处没有ajax请求，所以不涉及我们要考虑的ajax跨域问题
+      // const img_src = await reqCaptcha();
+      // this.$refs.captcha.src = img_src
+      // console.log(img_src)
       this.$refs.captcha.src = 'http://140.143.133.253:4000/captcha?time=' + Date.now()
     },
     // 异步登录
@@ -150,15 +153,17 @@ export default {
           return
         } else if (!this.pwd) {
           // 密码错误
-          this.showAlert('密码错误')
+          this.showAlert('请输入密码')
           return
         } else if (!captcha) {
           // 图形验证码错误
-          this.showAlert('图形验证码错误')
+          this.showAlert('请输入图形验证码错误')
           return
         } else {
           // 发送ajax请求短信登录
           result_login = await reqPwdLogin ({name, pwd, captcha})
+          console.log(captcha)
+          console.log(result_login)
         }
       }
       // 停止计时
@@ -167,7 +172,6 @@ export default {
         clearInterval(this.intervalId)
         // this.intervalId=undefined
       }
-      console.log(result_login)
       // 根据结果处理数据
       if(result_login.code === 0) {
         const user = result_login.data
