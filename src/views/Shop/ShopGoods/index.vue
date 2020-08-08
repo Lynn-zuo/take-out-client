@@ -2,10 +2,10 @@
 <div>
   <div class="goods">
     <div class="menu-wrapper">
-      <ul>
-        <!--  current -->
+      <ul class="content">
+        <!--  current  -->
         <li class="menu-item" v-for="(good, index) in shopGoods" :key="index" 
-          :class="{current:index===currentIndex}">
+          :class="{current:index===currentIndex}" @click="clickAsideItem(index)">
           <span class="text bottom-border-1px">
             <img class="icon" :src="good.icon" v-if="good.icon">
             {{good.name}}
@@ -15,7 +15,7 @@
     </div>
 
     <div class="foods-wrapper">
-      <ul>
+      <ul ref="foodsUI">
         <li class="food-list-hook" v-for="(good, index) in shopGoods" :key="index">
           <h1 class="title">{{good.name}}</h1>
           <ul>
@@ -48,25 +48,125 @@
 </template>
 
 <script>
+import BScroll from 'better-scroll'
 import {mapState} from 'vuex'
 export default {
-  name:'',
-  mounted(){
-    this.$store.dispatch('getShopGoods')
-  },
   data () {
     return {
       scrollY:0, // 右侧滑动的Y轴坐标(滑动过程中实时变化)
-      tops:[] // 所有右侧分类li的top组成的数组(列表第一次显示后就不再变化)
+      tops:[], // 所有右侧分类li的top组成的数组(列表第一次显示后就不再变化)
+      food:{}
     }
   },
   computed:{
     ...mapState(['shopGoods']),
     // 计算得到当前分类的下标
-    // currentIndex(){}
+    currentIndex(){
+      // 得到条件数据
+      const {scrollY, tops} = this
+      // 根据条件数据计算产生一个结果
+      const index = tops.findIndex((top, index) => {
+        // scrollY >= 当前top && scrollY < 下一个top
+        return scrollY >= top && scrollY < tops[index+1]
+      })
+      // 返回结果
+      return index
+    }
   },
+  mounted(){
+    this.$store.dispatch('getShopGoods', () => {
+      this.$nextTick(() => { // 列表数据更新后执行
+        this._initScroll()
+        this._initTops()
+      })
+    })
+  },
+  // watch+this.$nextTick()
+  // watch: {
+  //   shopGoods(value) {
+  //     setTimeout(() => {
+  //       let abscroll = new BScroll('.menu-wrapper', {
+  //         scrollY: true,
+  //         hasVerticalScroll: true
+  //       })
+  //       let bbscroll = new BScroll('.foods-wrapper', {
+  //         scrollY: true,
+  //         hasVerticalScroll: true
+  //       })
+  //       console.log(abscroll)
+  //       console.log(bbscroll)
+  //     },3000)
+  //     // this.$nextTick(() => {
+  //     //   let abscroll = new BScroll('.menu-wrapper', { // 
+  //     //     scrollY: true,
+  //     //     hasVerticalScroll: true,
+  //     //     wrapperHeight: 888,
+  //     //     click:true
+  //     //   })
+  //     //   let bbscroll = new BScroll('.foods-wrapper', { // 
+  //     //     scrollY: true,
+  //     //     hasVerticalScroll: true,
+  //     //     wrapperHeight: 888,
+  //     //     click:true
+  //     //   })
+  //     //   console.log(abscroll)
+  //     //   console.log(bbscroll)
+  //     // })
+  //   }
+  // },
   methods:{
-
+    // 初始化滚动
+    _initScroll(){
+      new BScroll('.menu-wrapper', { // 
+        scrollY: true,
+        click: true,
+        tap: true
+      })
+      this.rightScroll = new BScroll('.foods-wrapper', { // 
+        scrollY: true,
+        click:true,
+        probeType:2 // 因为惯性滑动不会触发
+      })
+      // 给右侧列表绑定scroll监听
+      this.rightScroll.on('scroll', ({x, y}) => {
+        // console.log(x,y)
+        this.scrollY = Math.abs(y)
+      })
+      // 给右侧列表绑定scroll结束的监听
+      this.rightScroll.on('scrollEnd', ({x, y}) => {
+        // console.log('scrollEnd',x,y)
+        this.scrollY = Math.abs(y)
+      })
+    },
+    // 初始化tops
+    _initTops(){
+      // 1. 初始化tops
+      const tops = []
+      let top = 0
+      tops.push(top)
+      // 2. 收集tops
+      // 找到所有分类的li
+      // const lis = this.$refs.foodsUI.children
+      const lis = this.$refs.foodsUI.getElementsByClassName('food-list-hook')
+      Array.prototype.slice.call(lis).forEach(li => {
+        top += li.clientHeight
+        tops.push(top)
+      })
+      // 3. 更新数据
+      this.tops = tops
+      // console.log(tops)
+    },
+    clickAsideItem(index){
+      console.log(index)
+      // console.log(-index.y)
+      // 使右侧列表滑动到对应的位置
+      // 得到目标位置的scrollY
+      const scrollY = this.tops[index]
+      // 立即更新scrollY(让点击分类项成为当前分类)
+      this.scrollY = scrollY
+      // 平滑滑动右侧列表
+      this.rightScroll.scrollTo(0, -scrollY, 300)
+    }
   },
   components: {
 
@@ -78,9 +178,9 @@ export default {
 @import "../../../common/stylus/mixins.styl"
 .goods
   display: flex
-  //position: absolute
-  top: 225px
-  bottom: 46px
+  position: fixed
+  top 195px
+  bottom 45px
   width: 100%
   background: #fff;
   overflow: hidden
@@ -99,7 +199,7 @@ export default {
         z-index: 10
         margin-top: -1px
         background: #fff
-        color: $green
+        color: $blue
         font-weight: 700
         .text
           border-none()

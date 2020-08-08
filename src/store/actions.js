@@ -99,14 +99,14 @@ export default {
     }
   },
   // 异步获取商家商品数组
-  async getShopGoods ({commit}) {
+  async getShopGoods ({commit}, callback) {
     const result_shopGoods = await reqShopGoods()
     if(result_shopGoods.code === 0){
       const shopGoods = result_shopGoods.data
       commit(RECEIVE_SHOP_GOODS, {shopGoods})
 
       // 如果组件中传递了接收消息的回调函数，数据更新后，调用回调通知调用的组件
-      // cb && cb()
+      callback && callback()
     }
   }
 }

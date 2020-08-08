@@ -87,7 +87,7 @@ export default {
   },
   watch: {
     // eslint-disable-next-line
-    categorys (value) { // categorys数组中有数据了,在异步更新界面之前执行
+    categorys () { // categorys数组中有数据了,在异步更新界面之前执行
       // setTimeout(() => {
       //   new Swiper('.swiper-container', {
       //     loop: true, // 循环轮播
@@ -114,7 +114,7 @@ export default {
           },
           observer: true, //修改swiper自己或子元素时，自动初始化swiper
         })
-      }, 100)
+      })
     }
   }
 }
