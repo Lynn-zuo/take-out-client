@@ -43,8 +43,9 @@ export default {
   [INCREMENT_FOOD_COUNT] (state, {food}) {
     if(!food.count){ // 第一次加
       // food.count = 1 // 新增一个属性(没有数据绑定)
+      // 问题: 新添加的属性没有数据劫持==>数据绑定==>更新了数据但界面不变
       // 对象 属性名 属性值
-      Vue.set(food, 'count', 1)
+      Vue.set(food, 'count', 1) // 给有数据绑定的对象添加指定属性名和值的属性(有绑定)
     } else {
       food.count++
     }

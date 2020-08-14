@@ -19,7 +19,8 @@
         <li class="food-list-hook" v-for="(good, index) in shopGoods" :key="index">
           <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+            <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" 
+              :key="index" @click="showFood(food)">
               <div class="icon">
                 <img width="57" height="57"
                   :src="food.icon">
@@ -35,7 +36,7 @@
                   <span class="now" v-if="food.price">￥{{food.price}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <CartControl :food="food" />
+                <CartControl :food="food" />
                 </div>
               </div>
             </li>
@@ -44,6 +45,7 @@
       </ul>
     </div>
   </div>
+  <Food :food="food" ref="food" />
 </div>
 </template>
 
@@ -51,12 +53,13 @@
 import BScroll from 'better-scroll'
 import {mapState} from 'vuex'
 import CartControl from '@/components/CartControl'
+import Food from '@/components/Food'
 export default {
   data () {
     return {
       scrollY:0, // 右侧滑动的Y轴坐标(滑动过程中实时变化)
       tops:[], // 所有右侧分类li的top组成的数组(列表第一次显示后就不再变化)
-      food:{}
+      food:{} // 需要显示的food
     }
   },
   computed:{
@@ -157,8 +160,9 @@ export default {
       this.tops = tops
       // console.log(tops)
     },
+    // 点击左侧列表右侧定位
     clickAsideItem(index){
-      console.log(index)
+      // console.log(index)
       // console.log(-index.y)
       // 使右侧列表滑动到对应的位置
       // 得到目标位置的scrollY
@@ -167,10 +171,19 @@ export default {
       this.scrollY = scrollY
       // 平滑滑动右侧列表
       this.rightScroll.scrollTo(0, -scrollY, 300)
+    },
+    // 显示点击的food
+    showFood(food) {
+      // 设置food
+      this.food = food
+      console.log(food)
+      // 显示food组件(父组件调用子组件对象的方法)
+      this.$refs.food.toggleShow()
     }
   },
   components: {
-    CartControl
+    CartControl,
+    Food
   }
 }
 </script>
