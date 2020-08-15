@@ -10,5 +10,6 @@ export default {
     userInfo: {}, // 用户信息
     shopGoods: [], // 商家商品数组
     shopRatings: [], // 商家评价列表
-    shopInfo: {} // 商家信息
+    shopInfo: {}, // 商家信息
+    cartFoods: [] // 购物车食品列表信息
 }

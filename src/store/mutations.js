@@ -46,6 +46,8 @@ export default {
       // 问题: 新添加的属性没有数据劫持==>数据绑定==>更新了数据但界面不变
       // 对象 属性名 属性值
       Vue.set(food, 'count', 1) // 给有数据绑定的对象添加指定属性名和值的属性(有绑定)
+      // 将food添加到cartFoods中
+      state.cartFoods.push(food)
     } else {
       food.count++
     }
@@ -53,6 +55,10 @@ export default {
   [DECREMENT_FOOD_COUNT] (state, {food}) {
     if(food.count){ // 有值大于0才去减
       food.count--
+      if(food.count==0) {
+        // 将food从cartFoods中移除
+        state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+      }
     }
   },
 }

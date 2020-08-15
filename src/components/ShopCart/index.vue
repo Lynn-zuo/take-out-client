@@ -2,52 +2,92 @@
 <div>
   <div class="shopcart">
     <div class="content">
-      <div class="content-left">
+      <div class="content-left" @click="toggleShow">
         <div class="logo-wrapper">
-          <div class="logo highlight">
-            <i class="iconfont icon-shopping_cart highlight"></i>
+          <div class="logo" :class="{highlight: totalCount}">
+            <i class="iconfont icon-shopcart" :class="{highlight: totalCount}"></i>
           </div>
-          <div class="num">1</div>
+          <div class="num" v-if="totalCount">{{totalCount}}</div>
         </div>
-        <div class="price highlight">￥10</div>
-        <div class="desc">另需配送费￥4元</div>
+        <div class="price" :class="{highlight: totalCount}">￥{{totalPrice}}</div>
+        <div class="desc">另需配送费￥{{shopInfo.deliveryPrice}}元</div>
       </div>
       <div class="content-right">
-        <div class="pay not-enough">
-          还差￥10元起送
+        <div class="pay" :class="payClass">
+          {{payText}}
         </div>
       </div>
     </div>
-    <div class="shopcart-list" style="display: none;">
+    <div class="shopcart-list" v-show="listShow">
       <div class="list-header">
         <h1 class="title">购物车</h1>
         <span class="empty">清空</span>
       </div>
       <div class="list-content">
         <ul>
-          <li class="food">
-            <span class="name">红枣山药糙米粥</span>
-            <div class="price"><span>￥10</span></div>
+          <li class="food" v-for="(food, index) in cartFoods" :key="index">
+            <span class="name">{{food.name}}</span>
+            <div class="price"><span>￥{{food.price}}</span></div>
             <div class="cartcontrol-wrapper">
-              <div class="cartcontrol">
-                <div class="iconfont icon-remove_circle_outline"></div>
-                <div class="cart-count">1</div>
-                <div class="iconfont icon-add_circle"></div>
-              </div>
+              <CartControl :food="food"/>
             </div>
           </li>
         </ul>
       </div>
     </div>
   </div>
-  <div class="list-mask" style="display: none;"></div>
+  <transition name="fade">
+    <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
+  </transition>
 </div>
 </template>
 
 <script>
+import {mapState, mapGetters} from 'vuex'
+import CartControl from '../CartControl'
 export default {
-  props: {
-    food: Object
+  data () {
+    return {
+      isShow: false
+    }
+  },
+  methods:{
+    toggleShow() {
+      // 只有当总数量>0才切换
+      if(this.totalCount > 0) {
+        this.isShow = !this.isShow
+      }
+    }
+  },
+  computed: {
+    ...mapState(['cartFoods', 'shopInfo']),
+    ...mapGetters(['totalCount', 'totalPrice']),
+    payClass () {
+      const {totalPrice} = this
+      const {minPrice} = this.shopInfo
+      return totalPrice>=minPrice ? 'enough' : 'not-enough'
+    },
+    payText () {
+      const {totalPrice} = this
+      const {minPrice} = this.shopInfo
+      if(totalPrice === 0){
+        return `￥${minPrice}元起送`
+      } else if (totalPrice < minPrice) {
+        return `还差￥${minPrice-totalPrice}元起送`
+      } else {
+        return '结算'
+      }
+    },
+    listShow() {
+      // 如果总数量为0，直接不显示
+      if(this.totalCount === 0){
+        return false
+      }
+      return this.isShow
+    }
+  },
+  components: {
+    CartControl
   }
 }
 </script>
@@ -87,8 +127,8 @@ export default {
             text-align: center
             background: #2b343c
             &.highlight
-              background: $green
-            .icon-shopping_cart
+              background: $blue
+            .icon-shopcart
               line-height: 44px
               font-size: 24px
               color: #80858a
@@ -138,12 +178,12 @@ export default {
           &.not-enough
             background: #2b333b
           &.enough
-            background: #00b43c
+            background: $blue
             color: #fff
     .shopcart-list
       position: absolute
       left: 0
-      top: 0
+      bottom: 48px
       z-index: -1
       width: 100%
       .list-header
@@ -195,7 +235,7 @@ export default {
     width: 100%
     height: 100%
     z-index: 40
-    backdrop-filter: blur(10px)
+    backdrop-filter: blur(1)
     opacity: 1
     background: rgba(7, 17, 27, 0.6)
     &.fade-enter-active, &.fade-leave-active
