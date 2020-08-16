@@ -1,6 +1,9 @@
 module.exports = {
   // 选项...
   devServer: {
+    open:true,
+    host:"localhost",
+    port:8080,
     proxy: {
       '/api': { // 匹配所有以 '/api'开头的请求路径
         target: 'http://140.143.133.253:4000', // 代理目标的基础路径

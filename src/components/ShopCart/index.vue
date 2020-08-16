@@ -18,23 +18,25 @@
         </div>
       </div>
     </div>
-    <div class="shopcart-list" v-show="listShow">
-      <div class="list-header">
-        <h1 class="title">购物车</h1>
-        <span class="empty">清空</span>
+    <transition name="move">
+      <div class="shopcart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty" @click="clearCart">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li class="food" v-for="(food, index) in cartFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price"><span>￥{{food.price}}</span></div>
+              <div class="cartcontrol-wrapper">
+                <CartControl :food="food"/>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="list-content">
-        <ul>
-          <li class="food" v-for="(food, index) in cartFoods" :key="index">
-            <span class="name">{{food.name}}</span>
-            <div class="price"><span>￥{{food.price}}</span></div>
-            <div class="cartcontrol-wrapper">
-              <CartControl :food="food"/>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </transition>
   </div>
   <transition name="fade">
     <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
@@ -43,6 +45,8 @@
 </template>
 
 <script>
+import BScroll from 'better-scroll'
+import { Dialog } from 'vant'
 import {mapState, mapGetters} from 'vuex'
 import CartControl from '../CartControl'
 export default {
@@ -57,6 +61,20 @@ export default {
       if(this.totalCount > 0) {
         this.isShow = !this.isShow
       }
+    },
+    clearCart() {
+      Dialog.confirm({
+        title: '',
+        message: '确认清空购物车吗?',
+      })
+        .then(() => {
+          // on confirm
+          this.$store.dispatch('clearCart')
+        })
+        .catch(() => {
+          // on cancel
+          console.log('取消清除购物车')
+        });
     }
   },
   computed: {
@@ -82,6 +100,20 @@ export default {
       // 如果总数量为0，直接不显示
       if(this.totalCount === 0){
         return false
+      }
+      if(this.isShow) {
+        this.$nextTick(() => {
+          // 在创建之前判断是否已经创建过
+          // 未创建，则创建保存起来
+          // 实现BScroll是一个单例
+          if(!this.scroll){
+            this.scroll = new BScroll('.list-content', {
+              click: true
+            })
+          }// else {
+          //   this.scroll.refresh() // 让滚动条刷新一下：重新统计内容高度(新版本优化过了)
+          // }
+        })
       }
       return this.isShow
     }
@@ -183,9 +215,14 @@ export default {
     .shopcart-list
       position: absolute
       left: 0
-      bottom: 48px
+      top: 0
       z-index: -1
       width: 100%
+      transform translateY(-100%)
+      &.move-enter-active, &.move-leave-active
+        transition transform .3s
+      &.move-enter, &.move-leave-to
+        transform translateY(0)
       .list-header
         height: 40px
         line-height: 40px
@@ -203,7 +240,7 @@ export default {
 
       .list-content
         padding: 0 18px
-        max-height: 217px
+        max-height: 300px
         overflow: hidden
         background: #fff
         .food
