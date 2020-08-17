@@ -196,9 +196,9 @@ export default {
 @import "../../../common/stylus/mixins.styl"
 .goods
   display: flex
-  position: fixed
+  position: absolute
   top 195px
-  bottom 45px
+  bottom 0
   width: 100%
   background: #fff;
   overflow: hidden

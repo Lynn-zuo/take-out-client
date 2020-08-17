@@ -11,8 +11,8 @@
       <div class="tab-item">
         <router-link to="/shop/info" replace>商家信息</router-link>
       </div>
-      <router-view/>
     </div>
+    <router-view />
   </div>
 </template>
 <script>

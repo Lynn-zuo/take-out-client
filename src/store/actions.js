@@ -92,13 +92,14 @@ export default {
     }
   },
   // 异步获取商家评价列表
-  async getShopRatings ({commit}) {
+  async getShopRatings ({commit}, callback) {
     const result_shopRatings = await reqShopRatings()
     if(result_shopRatings.code === 0){
       const shopRatings = result_shopRatings.data
       commit(RECEIVE_SHOP_RATINGS, {shopRatings})
 
-      // cb && cb()
+      // 如果组件中传递了接收消息的回调函数，数据更新后，调用回调通知调用的组件
+      callback && callback()
     }
   },
   // 异步获取商家商品数组

@@ -9,6 +9,8 @@ import {Button} from 'vant'
 
 import './mock/mockServer' // 加载mockServer
 
+import './filters' // 加载自定义过滤器
+
 Vue.config.productionTip = false
 // 注册全局组件标签
 Vue.component(Button.name, Button) // <vant-Button>
