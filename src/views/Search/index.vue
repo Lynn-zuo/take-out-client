@@ -1,13 +1,33 @@
 <template>
   <div class="search">
     <HeaderTop title="搜索"/>
-    <form class="search_form" action="#">
-      <input type="search" name="search" placeholder="请输入商家或美食名称" class="search_input">
+    <form class="search_form" @submit.prevent="search">
+      <input type="search" name="search" v-model="keyword" placeholder="请输入商家或美食名称" class="search_input">
       <input type="submit" name="submit" class="search_submit">
     </form>
+    <section class="list" v-if="!noSearchShops">
+      <ul class="list_container">
+        <!-- :to="'/shop?id=' + item.id" -->
+        <router-link :to="{path:'/shop', query:{id:item.id}}" tag="li" class="list_li"
+          v-for="item in searchShops" :key="item.id">
+          <section class="item_left">
+            <img :src="imgBaseUrl + item.image_path" class="restaurant_img">
+          </section>
+          <section class="item_right">
+            <div class="item_right_text">
+              <p><span>{{item.name}}</span></p>
+              <p>月售{{item.month_sales || item.recent_order_item}}单</p>
+              <p>{{item.delivery_fee || item.float_minimum_order_amount}}元起送/距离{{item.distance}}</p>
+            </div>
+          </section>
+        </router-link>
+      </ul>
+    </section>
+    <div class="search_none" v-else>很抱歉！无搜索结果</div>
   </div>
 </template>
 <script>
+import {mapState} from 'vuex'
 import HeaderTop from '@/components/HeaderTop'
 export default {
   name:'',
@@ -15,7 +35,33 @@ export default {
     HeaderTop
   },
   data () {
-    return { }
+    return {
+      imgBaseUrl: 'http://cangdu.org:8001/img/',
+      keyword: '',
+      noSearchShops: false
+    }
+  },
+  computed: {
+    ...mapState(['searchShops'])
+  },
+  methods: {
+    search () {
+      // 得到搜索关键字
+      const keyword = this.keyword.trim()
+      // 进行搜索
+      if(keyword) {
+        this.$store.dispatch('getSearchShops', keyword)
+      }
+    }
+  },
+  watch: {
+    searchShops(value) {
+      if(!value.length) {
+        this.noSearchShops = true
+      } else { // 有数据
+        this.noSearchShops = false
+      }
+    }
   }
 }
 </script>
@@ -49,4 +95,9 @@ export default {
         font-size 16px
         color #fff
         background-color #3399FF
+  // .list
+  //   .list_container
+  //     .list_li
+  //       .item_left
+  //       .item_right
 </style>

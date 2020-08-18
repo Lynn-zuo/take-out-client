@@ -100,7 +100,7 @@ export default {
     this._initScroll()
   },
   watch: {
-    shopInfo(){ // 刷新流程---》更新数据
+    shopInfo(){ // 在当前路由路径上刷新时更新调用
       this.$nextTick(() => {
         this._initScroll()
       })
