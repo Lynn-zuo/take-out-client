@@ -4,7 +4,7 @@
   <section class="order_no_login">
     <img src="./imgs/person.png">
     <h3>登录后查看外卖订单</h3>
-    <button>立即登陆</button>
+    <button><router-link to="/login">立即登陆</router-link></button>
   </section>
 </div>
 </template>
@@ -38,7 +38,7 @@ export default {
       padding 10px 0
       font-size 17px
       color #6a6a6a
-    >button
+    > button
       display inline-block
       background #3399FF
       font-size 14px
@@ -47,4 +47,6 @@ export default {
       outline none
       border-radius 5px
       padding 10px 20px
+      > a
+        color #fff
 </style>
