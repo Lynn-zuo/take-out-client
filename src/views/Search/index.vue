@@ -5,6 +5,7 @@
       <input type="search" name="search" v-model="keyword" placeholder="请输入商家或美食名称" class="search_input">
       <input type="submit" name="submit" class="search_submit">
     </form>
+
     <section class="list" v-if="!noSearchShops">
       <ul class="list_container">
         <!-- :to="'/shop?id=' + item.id" -->
@@ -16,8 +17,8 @@
           <section class="item_right">
             <div class="item_right_text">
               <p><span>{{item.name}}</span></p>
-              <p>月售{{item.month_sales || item.recent_order_item}}单</p>
-              <p>{{item.delivery_fee || item.float_minimum_order_amount}}元起送/距离{{item.distance}}</p>
+              <p>月售{{item.month_sales || item.recent_order_num}}单</p>
+              <p>{{item.delivery_fee || item.float_minimum_order_amount}}￥起送 / 距离{{item.distance}}</p>
             </div>
           </section>
         </router-link>
@@ -26,7 +27,9 @@
     <div class="search_none" v-else>很抱歉！无搜索结果</div>
   </div>
 </template>
+
 <script>
+import BScroll from 'better-scroll'
 import {mapState} from 'vuex'
 import HeaderTop from '@/components/HeaderTop'
 export default {
@@ -52,7 +55,16 @@ export default {
       if(keyword) {
         this.$store.dispatch('getSearchShops', keyword)
       }
+    },
+    _initScroll () {
+      new BScroll('.list', {
+        click: true
+      })
+      console.log('gundong')
     }
+  },
+  mounted() {
+    this._initScroll()
   },
   watch: {
     searchShops(value) {
@@ -60,6 +72,9 @@ export default {
         this.noSearchShops = true
       } else { // 有数据
         this.noSearchShops = false
+        this.$nextTick(() => {
+          this._initScroll()
+        })
       }
     }
   }
@@ -95,9 +110,35 @@ export default {
         font-size 16px
         color #fff
         background-color #3399FF
-  // .list
-  //   .list_container
-  //     .list_li
-  //       .item_left
-  //       .item_right
+  
+  .list
+    position: absolute
+    top: 70px
+    bottom: 0
+    left: 0
+    width: 100%
+    overflow: hidden
+    background: #fff
+    .list_container
+      margin-top 5px
+      .list_li
+        height 80px
+        display flex
+        flex-direction raw
+        padding 6px 10px
+        bottom-border-1px(rgba(7, 17, 27, 0.1))
+        .item_left
+          flex 1
+          .restaurant_img
+            width 80px
+            height 80px
+        .item_right
+          flex 2
+          .item_right_text
+            padding-top 2px
+            color #666
+            p
+              margin 7px
+            p:not(:first-child)
+              font-size 11px
 </style>
